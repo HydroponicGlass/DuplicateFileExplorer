@@ -8,8 +8,8 @@ Search Location : 중복파일을 검색할 경로를 지정합니다.
 Save Location : 중복파일을 다른 폴더로 이동할 경로를 지정합니다.  
 Search : 중복파일을 검색합니다.  
 Remove : 선택한 중복파일을 휴지통으로 이동시킵니다.  
-Move : 선택한 중복파일을 Save Location에서 지정한 폴더로 이동시킵니다.
-Quick Search : 정확성이 떨어지는 빠른탐색을 수행합니다.
+Move : 선택한 중복파일을 Save Location에서 지정한 폴더로 이동시킵니다.  
+Quick Search : 정확성이 떨어지는 빠른탐색을 수행합니다.  
 
 ### Sequence
 1. Search Location, Save Location을 Open버튼을 눌러 입력합니다.
