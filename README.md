@@ -18,10 +18,8 @@ Quick Search : 정확성이 떨어지는 빠른탐색을 수행합니다.
 4. Remove 혹은 Move 버튼을 눌러 중복파일을 삭제/이동합니다.
 
 ## Version History
-0.1  
- 1. Initial Version  
-0.2  
- 1. 일반탐색 속도 개선  
+0.1 : Initial Version  
+0.2 : 일반탐색 속도 개선  
 
 ## Logic
 Quick Search : 하위폴더를 포함한 폴더 내 파일들의 파일명과 파일크기가 같다면 중복파일로 확인합니다.  
