@@ -115,7 +115,7 @@
     <item>
      <widget class="QLabel" name="status_lbl">
       <property name="text">
-       <string>DuplicateFileExplorer V0.1</string>
+       <string>DuplicateFileExplorer V0.2</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

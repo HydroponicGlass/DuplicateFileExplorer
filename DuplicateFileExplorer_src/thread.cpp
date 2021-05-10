@@ -42,25 +42,67 @@ qint64 Thread::GetFileCount(QString location)
     return fileNumber;
 }
 
+/*  Check to file size and file checksum    */
 void Thread::NormalDuplicateCheck(std::vector<fileInfo> &fileList, fileInfo *currentFile)
 {
     for(unsigned long long file_loop = 0; file_loop < fileList.size(); file_loop++)
     {
-        if(fileList[file_loop].checksum == currentFile->checksum)
+        if(fileList[file_loop].size == currentFile->size)
         {
-            //qDebug()<<currentFile.name;
-            if(fileList[file_loop].checkDuplicate == false)
+            /*  input checksum(MD5) into currentFile    */
+            if(currentFile->checksum == NULL)
             {
-                fileList[file_loop].checkDuplicate = true;
-                emit SetFileData(fileList[file_loop]); // Send to mainwindow to ui(result table) update
+                QFile file(currentFile->absoluteFilePath);
+                if (file.open(QIODevice::ReadOnly)) {
+                    QByteArray fileData = file.readAll();
+                    QByteArray hashData = QCryptographicHash::hash(fileData, QCryptographicHash::Md5);
+
+                    // qDebug() << hashData.toHex() <<" " << currentFile.name;
+                    currentFile->checksum = hashData.toHex();
+                }
+                else
+                {
+                    // Error
+                }
             }
-            currentFile->checkDuplicate = true;
-            emit SetFileData(*currentFile); // Send to mainwindow to ui(result table) update
-            break;
+            /*  input checksum(MD5) into fileList[file_loop]    */
+            if(fileList[file_loop].checksum == NULL)
+            {
+                QFile file(fileList[file_loop].absoluteFilePath);
+                if (file.open(QIODevice::ReadOnly)) {
+                    QByteArray fileData = file.readAll();
+                    QByteArray hashData = QCryptographicHash::hash(fileData, QCryptographicHash::Md5);
+
+                    // qDebug() << hashData.toHex() <<" " << currentFile.name;
+                    fileList[file_loop].checksum = hashData.toHex();
+                }
+                else
+                {
+                    // Error
+                }
+            }
+            if(fileList[file_loop].checksum != NULL && currentFile->checksum != NULL)
+            {
+                if(fileList[file_loop].checksum == currentFile->checksum)
+                {
+                    qDebug()<<currentFile->name << " | " << currentFile->checksum << " | " << currentFile->location;
+                    qDebug()<<" " << fileList[file_loop].name << " | " << fileList[file_loop].checksum << " | " << fileList[file_loop].location;
+                    if(fileList[file_loop].checkDuplicate == false)
+                    {
+                        fileList[file_loop].checkDuplicate = true;
+                        emit SetFileData(fileList[file_loop]); // Send to mainwindow to ui(result table) update
+                    }
+                    currentFile->checkDuplicate = true;
+                    emit SetFileData(*currentFile); // Send to mainwindow to ui(result table) update
+                    break;
+                }
+            }
         }
     }
 }
 
+
+/*  Check file size and file name   */
 void Thread::QuickDuplicateCheck(std::vector<fileInfo> &fileList, fileInfo *currentFile)
 {
     for(unsigned long long file_loop = 0; file_loop < fileList.size(); file_loop++)
@@ -91,24 +133,7 @@ void Thread::MakeFileList(std::vector<fileInfo> &fileList, QString location, boo
         currentFile.date = item.birthTime().toString("yyyy-MM-dd");
         currentFile.location = item.absoluteFilePath();
         currentFile.absoluteFilePath = item.absoluteFilePath();
-        qDebug()<< currentFile.name << " | " << currentFile.absoluteFilePath;
-
-        /*  input checksum(MD5) */
-        if(quickDuplicateCheck_chk_g == false)
-        {
-            QFile file(currentFile.absoluteFilePath);
-            if (file.open(QIODevice::ReadOnly)) {
-                QByteArray fileData = file.readAll();
-                QByteArray hashData = QCryptographicHash::hash(fileData, QCryptographicHash::Md5);
-
-                // qDebug() << hashData.toHex() <<" " << currentFile.name;
-                currentFile.checksum = hashData.toHex();
-            }
-            else
-            {
-                // Error
-            }
-        }
+        //qDebug()<< currentFile.name << " | " << currentFile.absoluteFilePath;
 
         if(item.isDir() == true)
         {
